@@ -82,7 +82,18 @@
       <p>Samhain Festival Weekend</p>
     </footer>
     <script>
-      const pollCodes = ["HAUNTEDRAVE", "ILOVEPUMPKINS", "PAGANPARTY", "WILLOWSEVE"];
+      const pollCodes = [
+        "HAUNTEDRAVE",
+        "ILOVEPUMPKINS",
+        "PAGANPARTY",
+        "WILLOWSEVE",
+        "OICHETAIBHSE",
+        "PUCADRAIOCHT",
+        "TINEALLTA",
+        "DOIRCHEACHT",
+        "CAILEACHPUCA",
+        "QEVOICHETAIBHSE",
+      ];
       const pollForm = document.getElementById("poll-access");
       const pollInput = document.getElementById("poll-code");
       const pollNote = document.getElementById("poll-access-note");
@@ -92,7 +103,11 @@
       pollForm.addEventListener("submit", (event) => {
         event.preventDefault();
         const rawCode = pollInput.value || "";
-        const cleanedCode = rawCode.trim().toUpperCase();
+        const cleanedCode = rawCode
+          .trim()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toUpperCase();
 
         if (!cleanedCode) {
           pollNote.textContent = "Please enter an access code.";
