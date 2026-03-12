@@ -30,13 +30,23 @@
             budget for 1-3 May. The link may require permission to access.
           </p>
           <div class="hero-actions">
-            <a
-              class="button"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSegd9N4-UphTSuV2IZvh1-6n1MH6rRuFflvv-PRhgS36zcqJQ/viewform?usp=dialog"
-              target="_blank"
-              rel="noopener">
-              Open the poll
-            </a>
+            <form class="poll-access" id="poll-access" novalidate>
+              <label for="poll-code">Access code</label>
+              <div class="poll-access-row">
+                <input
+                  id="poll-code"
+                  name="poll-code"
+                  type="text"
+                  inputmode="text"
+                  autocomplete="one-time-code"
+                  placeholder="Enter code"
+                  required />
+                <button class="button" type="submit">Open the poll</button>
+              </div>
+              <p class="poll-access-note" id="poll-access-note" aria-live="polite">
+                Use the shared access code to open the poll.
+              </p>
+            </form>
           </div>
         </div>
       </section>
@@ -71,5 +81,36 @@
     <footer class="site-footer">
       <p>Samhain Festival Weekend</p>
     </footer>
+    <script>
+      const pollCodes = ["HAUNTEDRAVE", "ILOVEPUMPKINS", "PAGANPARTY", "WILLOWSEVE"];
+      const pollForm = document.getElementById("poll-access");
+      const pollInput = document.getElementById("poll-code");
+      const pollNote = document.getElementById("poll-access-note");
+      const pollBaseUrl =
+        "https://docs.google.com/forms/d/e/1FAIpQLSegd9N4-UphTSuV2IZvh1-6n1MH6rRuFflvv-PRhgS36zcqJQ/viewform?usp=pp_url&entry.1117762621=";
+
+      pollForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const rawCode = pollInput.value || "";
+        const cleanedCode = rawCode.trim().toUpperCase();
+
+        if (!cleanedCode) {
+          pollNote.textContent = "Please enter an access code.";
+          pollInput.focus();
+          return;
+        }
+
+        if (!pollCodes.includes(cleanedCode)) {
+          pollNote.textContent = "That code is not valid. Check with the organisers.";
+          pollInput.focus();
+          pollInput.select();
+          return;
+        }
+
+        const pollUrl = `${pollBaseUrl}${encodeURIComponent(cleanedCode)}`;
+        window.open(pollUrl, "_blank", "noopener");
+        pollNote.textContent = "Opening the poll in a new tab.";
+      });
+    </script>
   </body>
 </html>
